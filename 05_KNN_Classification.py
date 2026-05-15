@@ -1,28 +1,25 @@
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 from collections import Counter
+
 data = np.random.rand(100)
 train, test = data[:50], data[50:]
 labels = ["Class1" if x <= 0.5 else "Class2" for x in train]
 
-def knn(tr, tl, pt, k):
-    dists = sorted([(abs(pt-tr[i]), tl[i]) for i in range(50)])[:k]
-    return Counter([l for d, l in dists]).most_common(1)[0][0]
+def knn(td, tl, tp, k):
+    d = sorted([(abs(tp - td[i]), tl[i]) for i in range(len(td))])[:k]
+    return Counter([l for _, l in d]).most_common(1)[0][0]
 
-k_vals = [1, 2, 3, 4, 5, 20, 30]
-print("--- k-Nearest Neighbors Classification ---")
-results = {}
-for k in k_vals:
-    print(f"Results for k = {k}:")
+for k in [1,2,3,4,5,20,30]:
+    print("\nk =", k)
+
     preds = [knn(train, labels, p, k) for p in test]
-    results[k] = preds
-    for i, p in enumerate(preds, 51):
-        print(f"Point x{i} (value: {test[i-51]:.4f}) is classified as {p}")
-    print()
 
-for k in k_vals:
-    plt.figure(figsize=(10, 6))
-    plt.scatter(train, [0]*50, c=['blue' if l=='Class1' else 'red' for l in labels], label="Train")
-    for c, l in [('blue', 'Class1'), ('red', 'Class2')]:
-        pts = [test[i] for i in range(50) if results[k][i] == l]
-        plt.scatter(pts, [1]*len(pts), c=c, label=f"{l} (Test)", marker="x")
-    plt.title(f"k-NN Classification (k={k})"); plt.legend(); plt.grid(True); plt.show()
+    for i, p in enumerate(preds):
+        print(f"Point x{i+51} (value {test[i]:.4f}) was classified as {p}")
+
+    plt.figure()
+    plt.scatter(train, [0]*len(train))
+    plt.scatter(test, [1]*len(test))
+
+    plt.show()
