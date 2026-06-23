@@ -6,7 +6,7 @@ num_f = df.select_dtypes(include=[np.number]).columns
 
 for i, f in enumerate(num_f, 1):
     plt.subplot(3, 3, i)
-    sns.histplot(df[f], kde=True)
+    sns.histplot(df[f])
 plt.show()
 
 for i, f in enumerate(num_f, 1):
